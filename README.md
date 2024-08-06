@@ -36,4 +36,4 @@ Este proyecto es un **Gestor de Proyectos** en C++ que permite gestionar la info
 
 ## Contacto
 
-Para más información o preguntas, contacta a [Tu Nombre] en [Tu Correo Electrónico].
+Para más información o preguntas, contacta a jvoyarzun81@gmail.com
