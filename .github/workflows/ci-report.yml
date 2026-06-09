@@ -3,14 +3,14 @@ name: CIMonitorProyectoAdminCpp
 on:
   push:
     branches: [ main ]
-  workflowDispatch:
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
   buildAndMonitor:
-    runsOn: windows-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout del codigo
         uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
           $results = Get-Content testResults.json | ConvertFrom-Json
           $jsonReport = [PSCustomObject]@{
             proyecto = "ProyectoAdminCpp"
-            rama = "${{ github.refName }}"
+            rama = "${{ github.ref_name }}"
             commit = "${{ github.sha }}"
             pipeline = @{
               estado = "${{ job.status }}"
@@ -56,8 +56,8 @@ jobs:
 
       - name: Desplegar Reporte a GitHub Pages
         if: always()
-        uses: JamesIves/githubPagesDeployAction@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: .
           branch: ghPages
-          rsyncWithCustomCommand: cp -r
+          rsync-with-custom-command: cp -r
