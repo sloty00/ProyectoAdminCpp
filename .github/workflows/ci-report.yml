@@ -56,8 +56,8 @@ jobs:
 
       - name: Desplegar Reporte a GitHub Pages
         if: always()
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          folder: .
-          branch: ghPages
-          single-commit: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: ghPages
