@@ -60,4 +60,4 @@ jobs:
         with:
           folder: .
           branch: ghPages
-          rsync-with-custom-command: cp -r
+          single-commit: true
