@@ -1,0 +1,32 @@
+# Archivos generados por el compilador
+*.o
+*.obj
+*.exe
+*.out
+*.log
+
+# Archivos de configuración de IDE
+.vs/
+*.code-workspace
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archivos de configuración del compilador
+*.make
+*.ncb
+*.pdb
+
+# Archivos de configuración del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de directorios temporales
+temp/
+tmp/
+
+# Archivos de directorios específicos de usuario
+*.swp
+*.swo
+*.swn

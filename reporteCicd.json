@@ -1,0 +1,16 @@
+{
+  "proyecto": "ProyectoAdminCpp",
+  "rama": "main",
+  "commit": "55bd9f1ce9dc140862680eed7c801f062273a5e2",
+  "pipeline": {
+    "fechaEjecucion": "20260609T233301Z",
+    "estado": "success"
+  },
+  "tests": {
+    "coberturaCodigo": "100%",
+    "totales": 1,
+    "exitosos": 1,
+    "fallidos": 0
+  },
+  "detalles": "Compilacion mediante MSBuild exitosa."
+}
