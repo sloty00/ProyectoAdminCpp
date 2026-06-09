@@ -3,14 +3,14 @@ name: CIMonitorProyectoAdminCpp
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  workflowDispatch:
 
 permissions:
   contents: write
 
 jobs:
   buildAndMonitor:
-    runs-on: windows-latest
+    runsOn: windows-latest
     steps:
       - name: Checkout del codigo
         uses: actions/checkout@v3
@@ -20,18 +20,13 @@ jobs:
 
       - name: Compilar ProyectoAdminCpp
         run: |
-          # Compilamos la solucion directamente
           msbuild ProyectoAdminCpp.sln /p:Configuration=Release
-          
-          # Verificamos si el ejecutable se genero para definir exito o fallo
           if (Test-Path "x64/Release/ProyectoAdminCpp.exe") {
-            $EXIT_CODE = 0
+            $EXITCODE = 0
           } else {
-            $EXIT_CODE = 1
+            $EXITCODE = 1
           }
-
-          # Generamos el JSON para tu tablero
-          if ($EXIT_CODE -eq 0) {
+          if ($EXITCODE -eq 0) {
             echo '{"numPassedTests": 1, "numFailedTests": 0, "numTotalTests": 1}' > testResults.json
           } else {
             echo '{"numPassedTests": 0, "numFailedTests": 1, "numTotalTests": 1}' > testResults.json
@@ -43,11 +38,11 @@ jobs:
           $results = Get-Content testResults.json | ConvertFrom-Json
           $jsonReport = [PSCustomObject]@{
             proyecto = "ProyectoAdminCpp"
-            rama = "${{ github.ref_name }}"
+            rama = "${{ github.refName }}"
             commit = "${{ github.sha }}"
             pipeline = @{
               estado = "${{ job.status }}"
-              fechaEjecucion = "$(Get-Date -Format 'yyyy-MM-ddTHH:mm:ssZ')"
+              fechaEjecucion = "$(Get-Date -Format 'yyyyMMddTHHmmssZ')"
             }
             tests = @{
               exitosos = $results.numPassedTests
@@ -61,7 +56,8 @@ jobs:
 
       - name: Desplegar Reporte a GitHub Pages
         if: always()
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/githubPagesDeployAction@v4
         with:
           folder: .
-          branch: gh-pages
+          branch: ghPages
+          rsyncWithCustomCommand: cp -r
