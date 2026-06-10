@@ -76,7 +76,7 @@ jobs:
 
           $jsonReport = [PSCustomObject]@{
 
-            proyecto = "AdminPassSecCpp"
+            proyecto = "ProyectoAdminCpp"
 
             rama = "${{ github.ref_name }}"
 
