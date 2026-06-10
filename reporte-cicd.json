@@ -1,14 +1,14 @@
 {
-  "proyecto": "ProyectoAdminCpp",
+  "proyecto": "AdminPassSecCpp",
   "rama": "main",
-  "commit": "8a95a44de4fe762b84597f5c3d54095f20f997d7",
+  "commit": "a993fec66988ed7af4d899644c32ccadde0f90f6",
   "pipeline": {
-    "estado": "success",
-    "fechaEjecucion": "20260609T234140Z"
+    "fechaEjecucion": "20260610T003337Z",
+    "estado": "success"
   },
   "tests": {
-    "coberturaCodigo": "100%",
     "totales": 1,
+    "coberturaCodigo": "100%",
     "fallidos": 0,
     "exitosos": 1
   },
