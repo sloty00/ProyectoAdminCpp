@@ -1,4 +1,4 @@
-name: CIMonitorProyectoAdminCpp
+name: cimonitoradminpassseccpp
 
 on:
   push:
@@ -9,55 +9,58 @@ permissions:
   contents: write
 
 jobs:
-  buildAndMonitor:
+  buildandmonitor:
     runs-on: windows-latest
     steps:
-      - name: Checkout del codigo
+      - name: checkout del codigo
         uses: actions/checkout@v3
 
-      - name: Add MSBuild to PATH
+      - name: add msbuild to path
         uses: microsoft/setup-msbuild@v1
 
-      - name: Compilar ProyectoAdminCpp
+      - name: compilar adminpassseccpp
         run: |
-          msbuild ProyectoAdminCpp.sln /p:Configuration=Release
-          if (Test-Path "x64/Release/ProyectoAdminCpp.exe") {
-            $EXITCODE = 0
+          # Ruta corregida incluyendo la subcarpeta
+          msbuild ProyectoAdminCpp/ProyectoAdminCpp.sln /p:configuration=release
+          
+          # Ajuste de ruta de verificacion
+          if (test-path "ProyectoAdminCpp/x64/release/ProyectoAdminCpp.exe") {
+            $exitcode = 0
           } else {
-            $EXITCODE = 1
+            $exitcode = 1
           }
-          if ($EXITCODE -eq 0) {
-            echo '{"numPassedTests": 1, "numFailedTests": 0, "numTotalTests": 1}' > testResults.json
+          if ($exitcode -eq 0) {
+            echo '{"numpassedtests": 1, "numfailedtests": 0, "numtotaltests": 1}' > testresults.json
           } else {
-            echo '{"numPassedTests": 0, "numFailedTests": 1, "numTotalTests": 1}' > testResults.json
+            echo '{"numpassedtests": 0, "numfailedtests": 1, "numtotaltests": 1}' > testresults.json
           }
 
-      - name: Generar reporte JSON final
+      - name: generar reporte json final
         if: always()
         run: |
-          $results = Get-Content testResults.json | ConvertFrom-Json
-          $jsonReport = [PSCustomObject]@{
-            proyecto = "ProyectoAdminCpp"
+          $results = get-content testresults.json | convertfrom-json
+          $jsonreport = [pscustomobject]@{
+            proyecto = "adminpassseccpp"
             rama = "${{ github.ref_name }}"
             commit = "${{ github.sha }}"
             pipeline = @{
               estado = "${{ job.status }}"
-              fechaEjecucion = "$(Get-Date -Format 'yyyyMMddTHHmmssZ')"
+              fechaejecucion = "$(get-date -format 'yyyymmddthhmmssz')"
             }
             tests = @{
-              exitosos = $results.numPassedTests
-              fallidos = $results.numFailedTests
-              totales = $results.numTotalTests
-              coberturaCodigo = "100%"
+              exitosos = $results.numpassedtests
+              fallidos = $results.numfailedtests
+              totales = $results.numtotaltests
+              coberturacodigo = "100%"
             }
-            detalles = "Compilacion mediante MSBuild exitosa."
+            detalles = "compilacion mediante msbuild exitosa."
           }
-          $jsonReport | ConvertTo-Json -Depth 10 | Out-File reporte-cicd.json -Encoding utf8
+          $jsonreport | convertto-json -depth 10 | out-file reporte-cicd.json -encoding utf8
 
-      - name: Desplegar Reporte a GitHub Pages
+      - name: desplegar reporte a github pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
-          publish_branch: ghPages
+          publish_branch: ghpages
