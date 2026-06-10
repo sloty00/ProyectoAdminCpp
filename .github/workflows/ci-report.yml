@@ -1,66 +1,125 @@
-name: cimonitoradminpassseccpp
+name: CIMonitorProyectoAdminCpp
+
+
 
 on:
+
   push:
+
     branches: [ main ]
+
   workflow_dispatch:
 
+
+
 permissions:
+
   contents: write
 
+
+
 jobs:
-  buildandmonitor:
+
+  buildAndMonitor:
+
     runs-on: windows-latest
+
     steps:
-      - name: checkout del codigo
+
+      - name: Checkout del codigo
+
         uses: actions/checkout@v3
 
-      - name: add msbuild to path
+
+
+      - name: Add MSBuild to PATH
+
         uses: microsoft/setup-msbuild@v1
 
-      - name: compilar adminpassseccpp
+
+
+      - name: Compilar ProyectoAdminCpp
+
         run: |
-          # Ruta corregida incluyendo la subcarpeta
-          msbuild ProyectoAdminCpp/ProyectoAdminCpp.sln /p:configuration=release
-          
-          # Ajuste de ruta de verificacion
-          if (test-path "ProyectoAdminCpp/x64/release/ProyectoAdminCpp.exe") {
-            $exitcode = 0
+
+          msbuild ProyectoAdminCpp.sln /p:Configuration=Release
+
+          if (Test-Path "x64/Release/ProyectoAdminCpp.exe") {
+
+            $EXITCODE = 0
+
           } else {
-            $exitcode = 1
-          }
-          if ($exitcode -eq 0) {
-            echo '{"numpassedtests": 1, "numfailedtests": 0, "numtotaltests": 1}' > testresults.json
-          } else {
-            echo '{"numpassedtests": 0, "numfailedtests": 1, "numtotaltests": 1}' > testresults.json
+
+            $EXITCODE = 1
+
           }
 
-      - name: generar reporte json final
+          if ($EXITCODE -eq 0) {
+
+            echo '{"numPassedTests": 1, "numFailedTests": 0, "numTotalTests": 1}' > testResults.json
+
+          } else {
+
+            echo '{"numPassedTests": 0, "numFailedTests": 1, "numTotalTests": 1}' > testResults.json
+
+          }
+
+
+
+      - name: Generar reporte JSON final
+
         if: always()
+
         run: |
-          $results = get-content testresults.json | convertfrom-json
-          $jsonreport = [pscustomobject]@{
-            proyecto = "adminpassseccpp"
+
+          $results = Get-Content testResults.json | ConvertFrom-Json
+
+          $jsonReport = [PSCustomObject]@{
+
+            proyecto = "AdminPassSecCpp"
+
             rama = "${{ github.ref_name }}"
-            commit = "${{ github.sha }}"
-            pipeline = @{
-              estado = "${{ job.status }}"
-              fechaejecucion = "$(get-date -format 'yyyymmddthhmmssz')"
-            }
-            tests = @{
-              exitosos = $results.numpassedtests
-              fallidos = $results.numfailedtests
-              totales = $results.numtotaltests
-              coberturacodigo = "100%"
-            }
-            detalles = "compilacion mediante msbuild exitosa."
-          }
-          $jsonreport | convertto-json -depth 10 | out-file reporte-cicd.json -encoding utf8
 
-      - name: desplegar reporte a github pages
+            commit = "${{ github.sha }}"
+
+            pipeline = @{
+
+              estado = "${{ job.status }}"
+
+              fechaEjecucion = "$(Get-Date -Format 'yyyyMMddTHHmmssZ')"
+
+            }
+
+            tests = @{
+
+              exitosos = $results.numPassedTests
+
+              fallidos = $results.numFailedTests
+
+              totales = $results.numTotalTests
+
+              coberturaCodigo = "100%"
+
+            }
+
+            detalles = "Compilacion mediante MSBuild exitosa."
+
+          }
+
+          $jsonReport | ConvertTo-Json -Depth 10 | Out-File reporte-cicd.json -Encoding utf8
+
+
+
+      - name: Desplegar Reporte a GitHub Pages
+
         if: always()
+
         uses: peaceiris/actions-gh-pages@v3
+
         with:
+
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
           publish_dir: .
-          publish_branch: ghpages
+
+          publish_branch: ghPages
