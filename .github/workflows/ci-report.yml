@@ -98,7 +98,7 @@ jobs:
 
               totales = $results.numTotalTests
 
-              coberturaCodigo = "100%"
+              cobertura_codigo = "100%"
 
             }
 
